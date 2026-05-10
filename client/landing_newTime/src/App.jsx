@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { getOrder, addOrder, getTotalQuantity, getLastUpdated } from "./api/order";
 import image from "./assets/image.png";
-import logoImage from "../dist/assets/logo.png";
+import logoImage from "./assets/logo.png";
 import heroImage from "./assets/hero.png";
 import imageBig from "./assets/imageBig.png";
 
