@@ -1,7 +1,6 @@
 [build]
-  base = "client/landing_newTime"
   command = "npm run build"
-  publish = "client/landing_newTime/dist"
+  publish = "dist"
 
 [[headers]]
   for = "/*.js"
