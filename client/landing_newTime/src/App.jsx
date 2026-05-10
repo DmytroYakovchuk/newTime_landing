@@ -1,8 +1,8 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { getOrder, addOrder, getTotalQuantity } from "./api/order";
+import { getOrder, addOrder, getTotalQuantity, getLastUpdated } from "./api/order";
 import image from "./assets/image.png";
-import logoImage from "./assets/logo.png";
+import logoImage from "../dist/assets/logo.png";
 import heroImage from "./assets/hero.png";
 import imageBig from "./assets/imageBig.png";
 
@@ -35,6 +35,12 @@ export default function App() {
       setTotalQuantity(total);
     });
   }, []);
+
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+    useEffect(() => {
+      getLastUpdated().then(date => setLastUpdated(date));
+}, []);
 
   // Анимация счётчика
   useEffect(() => {
@@ -123,6 +129,7 @@ export default function App() {
   };
 
   return (
+    <div>
     <div className="app">
       {/* LEFT LOGO */}
       <div className="logo-block">
@@ -144,7 +151,7 @@ export default function App() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <button className="admin-toggle-btn" onClick={checkOrder}>
+          <button className="check-btn" onClick={checkOrder}>
             {loading ? "Загрузка..." : "Проверить"}
           </button>
         </div>
@@ -239,5 +246,16 @@ export default function App() {
         </div>
       </div>
     </div>
+          {/* FOOTER */}
+      <div className="footer">
+        {lastUpdated && (
+          <p>Последнее обновление {lastUpdated.toLocaleDateString('ru-RU', {
+            day: 'numeric', month: 'numeric'
+          })} в {lastUpdated.toLocaleTimeString('ru-RU', {
+            hour: '2-digit', minute: '2-digit'
+          })}</p>
+        )}
+      </div>
+</div>
   );
 }

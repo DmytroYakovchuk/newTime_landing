@@ -56,3 +56,18 @@ export async function getTotalQuantity() {
   });
   return total;
 }
+
+export async function getLastUpdated() {
+  const snapshot = await getDocs(ordersRef);
+  let lastDate = null;
+  snapshot.docs.forEach(d => {
+    const data = d.data();
+    const updated = data.updatedAt?.toDate?.();
+    const created = data.createdAt?.toDate?.();
+    const date = updated || created;
+    if (date && (!lastDate || date > lastDate)) {
+      lastDate = date;
+    }
+  });
+  return lastDate;
+}
