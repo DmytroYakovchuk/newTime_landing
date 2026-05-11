@@ -113,8 +113,8 @@ body {
 }
 
 .icon {
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
   border-radius: 16px;
   opacity: 0.8;
 }
@@ -139,6 +139,11 @@ img {
     justify-content: space-between;
     padding: 60px;
     text-align: left;
+  }
+
+   .icon {
+    width: 100px;
+    height: 100px;
   }
 
   .center h1 {
@@ -179,8 +184,8 @@ img {
   }
 
   .icon {
-    width: 80px;
-    height: 80px;
+    width: 160px;
+    height: 160px;
   }
 
   .icon.big {

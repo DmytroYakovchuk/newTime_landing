@@ -2,9 +2,9 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { getOrder, addOrder, getTotalQuantity, getLastUpdated } from "./api/order";
 import image from "./assets/image.png";
-import logoImage from "./assets/logo.png";
-import heroImage from "./assets/hero.png";
-import imageBig from "./assets/imageBig.png";
+import logoImage from "./assets/logoNewTime.png";
+// import heroImage from "./assets/images1.png";
+// import imageBig from "./assets/images2.png";
 
 const ADMIN_PASSWORD = "myGodisJesus"; // ← задайте свой пароль
 
@@ -235,15 +235,15 @@ export default function App() {
 
       {/* RIGHT ICONS */}
       <div className="right-icons">
-        <div className="icon big">
+        {/* <div className="icon big">
           <img src={imageBig} alt="Main" />
-        </div>
+        </div> */}
         <div className="icon">
           <img src={logoImage} alt="Main" />
         </div>
-        <div className="icon light">
-          <img src={heroImage} alt="Main" />
-        </div>
+        {/* // <div className="icon light">
+        //   <img src={heroImage} alt="Main" />
+        // </div> */}
       </div>
     </div>
           {/* FOOTER */}
