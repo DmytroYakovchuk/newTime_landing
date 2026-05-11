@@ -9,12 +9,6 @@ html, body {
   font-family: 'Space Grotesk', sans-serif;
   background: linear-gradient(90deg, #020617, #0f172a);
   color: white;
-  min-height: 100%;
-  overflow-x: hidden;
-}
-
-#root {
-  min-height: 100vh;
 }
 
 /* ===== APP LAYOUT (mobile-first) ===== */
