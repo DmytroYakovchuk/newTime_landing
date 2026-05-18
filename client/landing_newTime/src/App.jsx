@@ -6,13 +6,14 @@ import logoImage from "./assets/logoNewTime.png";
 // import heroImage from "./assets/images1.png";
 // import imageBig from "./assets/images2.png";
 
-const ADMIN_PASSWORD = "myGodisJesus"; // ← задайте свой пароль
+const ADMIN_PASSWORD = "myGodisJesus"; // пароль
 
 export default function App() {
   const [code, setCode] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const [newOrder, setNewOrder] = useState({
     orderNumber: "",
     package: "",
@@ -36,10 +37,20 @@ export default function App() {
     });
   }, []);
 
-  const [lastUpdated, setLastUpdated] = useState(null);
-
     useEffect(() => {
       getLastUpdated().then(date => setLastUpdated(date));
+}, []);
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const orderFromUrl = params.get("order");
+  if (orderFromUrl) {
+    setCode(orderFromUrl);
+    // автоматически проверить заказ
+    getOrder(orderFromUrl).then(data => setResult(data)).catch(() => {
+      setResult({ status: "error", quantity: 0 });
+    });
+  }
 }, []);
 
   // Анимация счётчика
@@ -47,7 +58,7 @@ export default function App() {
     if (totalQuantity === 0) return;
 
     let start = 0;
-    const duration = 1000; // 2 секунды
+    const duration = 1000; // 1 секунда
     const stepTime = 16; // ~60fps
     const steps = duration / stepTime;
     const increment = totalQuantity / steps;
