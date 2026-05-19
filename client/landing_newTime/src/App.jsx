@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { getOrder, addOrder, getTotalQuantity, getLastUpdated } from "./api/order";
+import { getOrder, addOrder, getTotalQuantity, getLastUpdated, shipOrder } from "./api/order";
 import image from "./assets/image.png";
 import logoImage from "./assets/logoNewTime.png";
 // import heroImage from "./assets/images1.png";
@@ -29,6 +29,9 @@ export default function App() {
     // Счётчик
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [displayCount, setDisplayCount] = useState(0);
+
+  const [shipData, setShipData] = useState({ orderNumber: "", quantity: "" });
+  const [shipping, setShipping] = useState(false);
 
   // Загружаем общее количество при старте
   useEffect(() => {
@@ -243,6 +246,47 @@ useEffect(() => {
           </button>
         </div>
       )}
+
+      {/* ФОРМА ОТГРУЗКИ */}
+{isAdmin && (
+  <div className="form">
+    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", textTransform: "uppercase", letterSpacing: "2px" }}>
+      Отгрузка пакетов
+    </p>
+    <input
+      placeholder="Номер заявки"
+      value={shipData.orderNumber}
+      onChange={(e) => setShipData({ ...shipData, orderNumber: e.target.value })}
+    />
+    <input
+      placeholder="Количество к отгрузке"
+      value={shipData.quantity}
+      onChange={(e) => setShipData({ ...shipData, quantity: e.target.value })}
+    />
+    <button
+      onClick={async () => {
+        if (!shipData.orderNumber || !shipData.quantity) {
+          alert("Заполните все поля");
+          return;
+        }
+        try {
+          setShipping(true);
+          const remaining = await shipOrder(shipData.orderNumber, shipData.quantity);
+          alert(`Отгружено! Остаток: ${remaining} пакетов`);
+          setShipData({ orderNumber: "", quantity: "" });
+          await refreshTotal();
+        } catch {
+          alert("Заказ не найден");
+        } finally {
+          setShipping(false);
+        }
+      }}
+      disabled={shipping}
+    >
+      {shipping ? "Обработка..." : "Отгрузить"}
+    </button>
+  </div>
+)}
 
       {/* RIGHT ICONS */}
       <div className="right-icons">

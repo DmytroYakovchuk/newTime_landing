@@ -71,3 +71,23 @@ export async function getLastUpdated() {
   });
   return lastDate;
 }
+
+export async function shipOrder(orderNumber, shipQuantity) {
+  const q = query(ordersRef, where("orderNumber", "==", Number(orderNumber)));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    throw new Error("Заказ не найден");
+  }
+
+  const existingDoc = snapshot.docs[0];
+  const existingQuantity = Number(existingDoc.data().quantity) || 0;
+  const newQuantity = Math.max(0, existingQuantity - Number(shipQuantity));
+
+  await updateDoc(doc(db, "orders", existingDoc.id), {
+    quantity: newQuantity,
+    updatedAt: new Date()
+  });
+
+  return newQuantity;
+}
