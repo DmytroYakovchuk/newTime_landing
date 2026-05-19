@@ -180,7 +180,10 @@ useEffect(() => {
           <p>Статус: {result.status}</p>
           <p>Готово: {(result.quantity + (Number(result.totalShipped) || 0)).toLocaleString()} шт</p>
           {result.totalShipped > 0 && (
-            <p>Отгружено: {Number(result.totalShipped).toLocaleString()} шт</p>
+            <>
+              <p>Отгружено: {Number(result.totalShipped).toLocaleString()} шт</p>
+              <p>Остаток: {Number(result.quantity).toLocaleString()} шт</p>
+            </>
           )}
         </div>
     }
