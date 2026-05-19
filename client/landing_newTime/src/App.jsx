@@ -33,6 +33,8 @@ export default function App() {
   const [shipData, setShipData] = useState({ orderNumber: "", quantity: "" });
   const [shipping, setShipping] = useState(false);
 
+  const [activeTab, setActiveTab] = useState("add");
+
   // Загружаем общее количество при старте
   useEffect(() => {
     getTotalQuantity().then(total => {
@@ -220,71 +222,90 @@ useEffect(() => {
 
       {/* ADMIN FORM */}
       {isAdmin && (
-        <div className="form">
-          <input
-            placeholder="Номер заявки"
-            value={newOrder.orderNumber}
-            onChange={(e) => setNewOrder({ ...newOrder, orderNumber: e.target.value })}
-          />
-          <input
-            placeholder="Размер пакета"
-            value={newOrder.package}
-            onChange={(e) => setNewOrder({ ...newOrder, package: e.target.value })}
-          />
-          <input
-            placeholder="Статус"
-            value={newOrder.status}
-            onChange={(e) => setNewOrder({ ...newOrder, status: e.target.value })}
-          />
-          <input
-            placeholder="Количество"
-            value={newOrder.quantity}
-            onChange={(e) => setNewOrder({ ...newOrder, quantity: e.target.value })}
-          />
-          <button onClick={createOrder} disabled={creating}>
-            {creating ? "Сохранение..." : "Добавить заказ"}
-          </button>
-        </div>
-      )}
+  <div className="admin-tabs-wrapper">
+    {/* ВКЛАДКИ */}
+    <div className="admin-tabs">
+      <button
+        className={`tab-btn ${activeTab === "add" ? "active" : ""}`}
+        onClick={() => setActiveTab("add")}
+      >
+        Добавить
+      </button>
+      <button
+        className={`tab-btn ${activeTab === "ship" ? "active" : ""}`}
+        onClick={() => setActiveTab("ship")}
+      >
+        Отгрузка
+      </button>
+    </div>
 
-      {/* ФОРМА ОТГРУЗКИ */}
-{isAdmin && (
-  <div className="form">
-    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", textTransform: "uppercase", letterSpacing: "2px" }}>
-      Отгрузка пакетов
-    </p>
-    <input
-      placeholder="Номер заявки"
-      value={shipData.orderNumber}
-      onChange={(e) => setShipData({ ...shipData, orderNumber: e.target.value })}
-    />
-    <input
-      placeholder="Количество к отгрузке"
-      value={shipData.quantity}
-      onChange={(e) => setShipData({ ...shipData, quantity: e.target.value })}
-    />
-    <button
-      onClick={async () => {
-        if (!shipData.orderNumber || !shipData.quantity) {
-          alert("Заполните все поля");
-          return;
-        }
-        try {
-          setShipping(true);
-          const remaining = await shipOrder(shipData.orderNumber, shipData.quantity);
-          alert(`Отгружено! Остаток: ${remaining} пакетов`);
-          setShipData({ orderNumber: "", quantity: "" });
-          await refreshTotal();
-        } catch {
-          alert("Заказ не найден");
-        } finally {
-          setShipping(false);
-        }
-      }}
-      disabled={shipping}
-    >
-      {shipping ? "Обработка..." : "Отгрузить"}
-    </button>
+    {/* ФОРМА ДОБАВЛЕНИЯ */}
+    {activeTab === "add" && (
+      <div className="form">
+        <input
+          placeholder="Номер заявки"
+          value={newOrder.orderNumber}
+          onChange={(e) => setNewOrder({ ...newOrder, orderNumber: e.target.value })}
+        />
+        <input
+          placeholder="Размер пакета"
+          value={newOrder.package}
+          onChange={(e) => setNewOrder({ ...newOrder, package: e.target.value })}
+        />
+        <input
+          placeholder="Статус"
+          value={newOrder.status}
+          onChange={(e) => setNewOrder({ ...newOrder, status: e.target.value })}
+        />
+        <input
+          placeholder="Количество"
+          value={newOrder.quantity}
+          onChange={(e) => setNewOrder({ ...newOrder, quantity: e.target.value })}
+        />
+        <button onClick={createOrder} disabled={creating}>
+          {creating ? "Сохранение..." : "Добавить заказ"}
+        </button>
+      </div>
+    )}
+
+    {/* ФОРМА ОТГРУЗКИ */}
+    {activeTab === "ship" && (
+      <div className="ship-form">
+        <p>Отгрузка пакетов</p>
+        <input
+          placeholder="Номер заявки"
+          value={shipData.orderNumber}
+          onChange={(e) => setShipData({ ...shipData, orderNumber: e.target.value })}
+        />
+        <input
+          placeholder="Количество к отгрузке"
+          value={shipData.quantity}
+          onChange={(e) => setShipData({ ...shipData, quantity: e.target.value })}
+        />
+        <button
+          onClick={async () => {
+            if (!shipData.orderNumber || !shipData.quantity) {
+              alert("Заполните все поля");
+              return;
+            }
+            try {
+              setShipping(true);
+              const remaining = await shipOrder(shipData.orderNumber, shipData.quantity);
+              alert(`Отгружено! Остаток: ${remaining} пакетов`);
+              setShipData({ orderNumber: "", quantity: "" });
+              await refreshTotal();
+            } catch {
+              alert("Заказ не найден");
+            } finally {
+              setShipping(false);
+            }
+          }}
+          disabled={shipping}
+        >
+          {shipping ? "Обработка..." : "Отгрузить"}
+        </button>
+      </div>
+    )}
   </div>
 )}
 
