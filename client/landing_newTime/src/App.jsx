@@ -171,17 +171,21 @@ useEffect(() => {
             {loading ? "Загрузка..." : "Проверить"}
           </button>
         </div>
-        {result && (
-          <div className="result">
-            {result.status === "error"
-              ? <p>Заказ не найден</p>
-              : <p>
-                  Размер: {result.package || "неизвестно"} <br />
-                  Статус: {result.status} {result.quantity}
-                </p>
-            }
-          </div>
-        )}
+       {result && (
+  <div className="result">
+    {result.status === "error"
+      ? <p>Заказ не найден</p>
+      : <div>
+          <p>Размер: {result.package || "неизвестно"}</p>
+          <p>Статус: {result.status}</p>
+          <p>Готово: {(result.quantity + (Number(result.totalShipped) || 0)).toLocaleString()} шт</p>
+          {result.totalShipped > 0 && (
+            <p>Отгружено: {Number(result.totalShipped).toLocaleString()} шт</p>
+          )}
+        </div>
+    }
+  </div>
+)}
 
         {/* КНОПКА ВХОДА ДЛЯ АДМИНА */}
         <div className="admin-login">

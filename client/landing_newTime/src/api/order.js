@@ -80,12 +80,21 @@ export async function shipOrder(orderNumber, shipQuantity) {
     throw new Error("Заказ не найден");
   }
 
-  const existingDoc = snapshot.docs[0];
-  const existingQuantity = Number(existingDoc.data().quantity) || 0;
+    const existingDoc = snapshot.docs[0];
+  const existingData = existingDoc.data();
+  const existingQuantity = Number(existingData.quantity) || 0;
   const newQuantity = Math.max(0, existingQuantity - Number(shipQuantity));
+  const shippedHistory = existingData.shippedHistory || [];
+
+  shippedHistory.push({
+    quantity: Number(shipQuantity),
+    date: new Date()
+  });
 
   await updateDoc(doc(db, "orders", existingDoc.id), {
     quantity: newQuantity,
+    shippedHistory: shippedHistory,
+    totalShipped: (Number(existingData.totalShipped) || 0) + Number(shipQuantity),
     updatedAt: new Date()
   });
 
