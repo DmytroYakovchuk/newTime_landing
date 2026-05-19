@@ -52,7 +52,8 @@ export async function getTotalQuantity() {
   const snapshot = await getDocs(ordersRef);
   let total = 0;
   snapshot.docs.forEach(d => {
-    total += Number(d.data().quantity) || 0;
+    const data = d.data();
+    total += (Number(data.quantity) || 0) + (Number(data.totalShipped) || 0);
   });
   return total;
 }
